@@ -320,17 +320,13 @@ module Gcloud
       #     # process msg
       #   end
       #
-      def listen max: 100, autoack: false, delay: 1
+      def listen max: 100, autoack: false
         loop do
           msgs = wait_for_messages max: max, autoack: autoack
-          if msgs.any?
-            msgs.each { |msg| yield msg }
-          else
-            sleep delay
-          end
+          yield(msgs)
         end
       end
-
+      
       ##
       # Acknowledges receipt of a message. After an ack,
       # the Pub/Sub system can remove the message from the subscription.
